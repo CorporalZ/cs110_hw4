@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>My TODOs</title>
+	<link rel="stylesheet" href="main.css">
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+</head>
+<body>
+	<div class="search">
+		<input id="add_to_list_text" type="text" placeholder="New Todo" style="width:250px"/>
+		<input id="add_to_list" type="button" value="Add" style="width:100px"/>
+		<input type="button" value="" style="width:50px;opacity:0"/>
+		<input id="search_from_list_text" type="search" placeholder="Search Todo" style="width:250px"/>
+		<input id="search_from_list" type="button" value="Search" style="width:100px"/>
+	</div>
+	<div class="list">
+		<span>Todos List</span>
+		<ul>
+		</ul>
+	</div>
+	<script>
+	  let ul = $("ul"); 
+	  let inSearchMode = false;
+	  let socket = io();
+	  socket.emit('list_init_data',{});
+	  socket.on('list_from_server', function (data) {
+	  	if(inSearchMode)
+	  		return 0;
+	  	ul.html("");
+	  	data.list.forEach(function(element){
+	  	   if(element.text!="")
+		   ul.append('<li><input onclick="chacke_change(this)" '+ element.done +' type="checkbox" data-id="'+element.id+'"">'+element.text+'<img onclick="remove_from_list(this)" src="/multiply.png" width="15px" data-id="'+element.id+'""></li>');
+		});
+	  });
+	  socket.on('list_from_search', function (data) {
+	  	if(!inSearchMode)
+	  		return 0;
+	  	ul.html("");
+	  	data.list.forEach(function(element){
+	  	   if(element.text!="")
+		   ul.append('<li><input onclick="chacke_change(this)" '+ element.done +' type="checkbox" data-id="'+element.id+'"">'+element.text+'<img onclick="remove_from_list(this)" src="/multiply.png" width="15px" data-id="'+element.id+'""></li>');
+		});
+	  });
+	  add_to_list.onclick=function(){
+	  	inSearchMode = false;
+	  	socket.emit('add_to_list',{text:add_to_list_text.value});
+	  	add_to_list_text.value="";
+	  };
+	  function remove_from_list(element){
+	  	inSearchMode = false;
+	  	socket.emit('remove_from_list',$(element).attr("data-id"));
+	  }
+	  search_from_list.onclick=function(){
+	  	inSearchMode = true;
+	  	socket.emit('search_from_list',{text:search_from_list_text.value});
+	  };
+	  function chacke_change(element){
+	  	console.log(element);
+	  	inSearchMode = false;
+	  	socket.emit('change_done_from_list',$(element).attr("data-id"));
+	  }
+	</script>
+</body>
+</html>

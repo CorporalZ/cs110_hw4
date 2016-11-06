@@ -1,0 +1,45 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto+Slab');
+@import url('https://fonts.googleapis.com/css?family=Ubuntu');
+
+body{
+	background: url("http://subtlepatterns2015.subtlepatterns.netdna-cdn.com/patterns/seigaiha.png");
+	font-family: 'Roboto Slab', serif;
+}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+.search {
+  position: absolute;
+  top: 15px;
+  left: 20px;
+  right: 20px;
+}
+.search input {
+  width: 265px;
+  border: 1px solid #ccc;
+  padding: 8px;
+  font-size: 15px;
+  -webkit-transition: width 0.2s;
+  transition: width 0.2s;
+  -webkit-appearance: none;
+}
+.fix-search .search {
+  position: fixed;
+  top: 10px;
+}
+.fix-search .search input {
+  width: 250px;
+}
+.list{
+	font-family: 'Ubuntu', sans-serif;
+	margin: 80px 25px;
+}
+img{
+    width: 19px;
+    vertical-align: top;
+}
